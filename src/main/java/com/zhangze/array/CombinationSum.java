@@ -24,6 +24,7 @@ import java.util.*;
  */
 public class CombinationSum {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
         return combination(candidates, target, 0);
     }
 
@@ -36,17 +37,24 @@ public class CombinationSum {
             List<Integer> list = new ArrayList<>();
             list.add(candidates[i]);
             if (target == candidates[i]) {
+                if (i + 1 < candidates.length && candidates[i + 1] == candidates[i]) {
+                    list.remove(list.size()-1);
+                    continue;
+                }
                 result.add(list);
                 continue;
             }
             if (target - candidates[i] > 0) {
-                List<List<Integer>> r = combination(candidates, target - candidates[i], i);
+                List<List<Integer>> r = combination(candidates, target - candidates[i], i + 1);
                 if (r.size() > 0) {
                     for (List<Integer> ii : r) {
                         ii.addAll(list);
                         result.add(ii);
                     }
                 }
+            }
+            while (i + 1 < candidates.length && candidates[i+1] == candidates[i]) {
+                i++;
             }
         }
         return result;
